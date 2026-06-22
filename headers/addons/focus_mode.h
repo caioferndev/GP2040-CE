@@ -48,20 +48,19 @@ public:
     virtual void postprocess(bool sent) {}
     virtual void reinit() {}
     virtual std::string name() { return FocusModeName; }
-    static bool isMacroLockEnabled(const FocusModeOptions& options) {
-        return options.enabled && options.macroLockEnabled; 
-    }
-    static bool isFocusModeActive(const FocusModeOptions& options, const Gamepad * gamepad) {
-        // focus mode is active if:
+
+    // returns false if addon or macro lock is disabled
+    static bool isMacroLockEnabled(const FocusModeOptions& options);
+
+    // focus mode is active if:
         //   1. override is on
         //   2. focus mode pin is pressed
         //   3. if invert switch is on, focus mode pin is NOT pressed
-        return options.overrideEnabled ||
-            (gamepad->mapFocusMode->pinMask && ((gamepad->debouncedGpio & gamepad->mapFocusMode->pinMask) ^ (options.invertSwitch ? gamepad->mapFocusMode->pinMask : 0)));
-    }
+    static bool isFocusModeActive(const FocusModeOptions& options, const Gamepad * gamepad);
 private:
+    static uint32_t invertSwitchMask;
     uint32_t buttonLockMask;
-    uint32_t invertMask;
+    uint32_t dpadLockMask;
 };
 
 #endif  // _FocusMode_H_

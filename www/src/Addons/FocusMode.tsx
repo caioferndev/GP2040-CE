@@ -25,6 +25,10 @@ export const focusModeScheme = {
 		.number()
 		.label('Focus Mode Button Lock Map')
 		.validateRangeWhenValue('FocusModeAddonEnabled', 0, (1 << 20) - 1),
+	focusModeInvertSwitch: yup
+		.number()
+		.label('Focus Mode Invert Switch')
+		.validateRangeWhenValue('FocusModeAddonEnabled', 0, 1),
 };
 
 export const focusModeState = {
@@ -32,6 +36,7 @@ export const focusModeState = {
 	focusModeButtonLockEnabled: 0,
 	focusModeMacroLockEnabled: 0,
 	focusModeButtonLockMask: 0,
+	focusModeInvertSwitch: 0,
 };
 
 const FocusMode = ({
@@ -90,6 +95,18 @@ const FocusMode = ({
 						checked={Boolean(values.focusModeButtonLockEnabled)}
 						onChange={(e) => {
 							handleCheckbox('focusModeButtonLockEnabled');
+							handleChange(e);
+						}}
+					/>
+					<FormCheck
+						label={t('Common:invert-switch')}
+						className="col-sm-3 ms-3"
+						type="switch"
+						id="FocusModeAddonInvertSwitch"
+						isInvalid={false}
+						checked={Boolean(values.focusModeInvertSwitch)}
+						onChange={(e) => {
+							handleCheckbox('focusModeInvertSwitch');
 							handleChange(e);
 						}}
 					/>

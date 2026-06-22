@@ -787,6 +787,7 @@ message FocusModeOptions
     optional bool buttonLockEnabled = 6;
     optional bool macroLockEnabled = 7;
     optional bool overrideEnabled = 8;
+    optional bool invertSwitch = 9;
 }
 
 message MacroInput

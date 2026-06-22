@@ -10,14 +10,17 @@ bool FocusModeAddon::available() {
 void FocusModeAddon::setup() {
 	const FocusModeOptions& options = Storage::getInstance().getAddonOptions().focusModeOptions;
 	buttonLockMask = options.buttonLockMask;
+	// lets make this more complicated. make an "invert mask". 
+	// if invert switch is enabled, take the pre-existing mask and xor it with the debounced pins.
+	Gamepad * gamepad = Storage::getInstance().GetGamepad();
+	invertMask = options.invertSwitch ? gamepad->mapFocusMode->pinMask : 0; // gamepad re-inits after profile switch. we can store 
 }
 
 void FocusModeAddon::process() {
-	Gamepad * gamepad = Storage::getInstance().GetGamepad();
-	const FocusModeOptions& options = Storage::getInstance().getAddonOptions().focusModeOptions;
 	// Override Enabled Focus-Mode Toggle OR the pin has been pressed
-	if ( options.overrideEnabled || 
-		(gamepad->mapFocusMode->pinMask && (gamepad->debouncedGpio & gamepad->mapFocusMode->pinMask))) {
+	const FocusModeOptions& options = Storage::getInstance().getAddonOptions().focusModeOptions;
+	Gamepad * gamepad = Storage::getInstance().GetGamepad();
+	if (isFocusModeActive(options, gamepad)) {
 		if (buttonLockMask & GAMEPAD_MASK_DU) {
 			gamepad->state.dpad &= ~GAMEPAD_MASK_UP;
 		}

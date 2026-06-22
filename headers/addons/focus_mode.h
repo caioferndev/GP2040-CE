@@ -32,6 +32,10 @@
 #define FOCUS_MODE_MACRO_LOCK_ENABLED 1
 #endif
 
+#ifndef FOCUS_MODE_INVERT_SWITCH
+#define FOCUS_MODE_INVERT_SWITCH 0
+#endif
+
 // FocusMode Module Name
 #define FocusModeName "FocusMode"
 
@@ -44,8 +48,20 @@ public:
     virtual void postprocess(bool sent) {}
     virtual void reinit() {}
     virtual std::string name() { return FocusModeName; }
+    static bool isMacroLockEnabled(const FocusModeOptions& options) {
+        return options.enabled && options.macroLockEnabled; 
+    }
+    static bool isFocusModeActive(const FocusModeOptions& options, const Gamepad * gamepad) {
+        // focus mode is active if:
+        //   1. override is on
+        //   2. focus mode pin is pressed
+        //   3. if invert switch is on, focus mode pin is NOT pressed
+        return options.overrideEnabled ||
+            (gamepad->mapFocusMode->pinMask && ((gamepad->debouncedGpio & gamepad->mapFocusMode->pinMask) ^ (options.invertSwitch ? gamepad->mapFocusMode->pinMask : 0)));
+    }
 private:
     uint32_t buttonLockMask;
+    uint32_t invertMask;
 };
 
 #endif  // _FocusMode_H_

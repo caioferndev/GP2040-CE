@@ -25,5 +25,6 @@ export default {
 	'lock-rgb-led': 'Lock RGB LED',
 	'lock-macro': 'Lock Macro',
 	'lock-buttons': 'Lock Buttons',
+	'invert-switch': 'Invert Switch',
 	'loading-text': 'Loading...',
 };
